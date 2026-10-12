@@ -1,0 +1,75 @@
+groups:
+  - name: cornerstone-retail
+    rules:
+      - alert: RetailApiUnavailable
+        expr: up{job="cornerstone-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: Cornerstone POS API is unavailable
+          description: Prometheus has been unable to scrape the POS API for one minute.
+      - alert: RetailDatabaseUnavailable
+        expr: pos_mongodb_up == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: POS database connection is unavailable
+          description: The API cannot reach its local MongoDB database.
+      - alert: RetailCloudDatabaseUnavailable
+        expr: pos_cloud_mongodb_configured == 1 and pos_cloud_mongodb_up == 0
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: Cloud database synchronization is unavailable
+          description: The configured cloud MongoDB service cannot currently be reached.
+      - alert: RetailApiErrorsElevated
+        expr: sum(rate(http_requests_total{job="cornerstone-api",status=~"5.."}[5m])) / clamp_min(sum(rate(http_requests_total{job="cornerstone-api"}[5m])), 0.01) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: POS API server error rate is elevated
+          description: More than 5 percent of recent API requests are failing.
+      - alert: RetailTransactionsBackingUp
+        expr: pos_pending_transactions > 50
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: Pending retail transactions are accumulating
+          description: More than 50 local transactions have been waiting to synchronize.
+      - alert: RetailBacklogPredicted
+        expr: aiops_predicted_pending_transactions > 50
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: AIOps forecasts a retail transaction backlog
+          description: The recent trend predicts more than 50 pending transactions within 15 minutes.
+      - alert: RetailMemoryGrowthPredicted
+        expr: aiops_predicted_process_memory_megabytes > 400
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: AIOps forecasts high POS API memory use
+          description: The recent memory trend predicts API resident memory above 400 MiB within 15 minutes.
+      - alert: RetailAnomalyDetected
+        expr: aiops_anomaly_detected == 1
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: AIOps detected unusual POS system behavior
+          description: The Isolation Forest flagged the latest service telemetry as anomalous.
+      - alert: RetailAIOpsBaselineNotReady
+        expr: aiops_model_ready == 0
+        for: 15m
+        labels:
+          severity: info
+        annotations:
+          summary: AIOps baseline is still warming up
+          description: Anomaly scores become available after 40 successful telemetry samples.

@@ -1,0 +1,93 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">Cornerstone POS edge-to-cloud architecture</title>
+  <desc id="description">Implemented architecture: React POS sends validated transactions to a Node.js and Express API on the Raspberry Pi. Express stores transactions in local MongoDB and retries differential synchronization to an optional AWS-hosted MongoDB cloud database. Browser storage queues sales if the local API is unreachable.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8f8f3"/><stop offset="1" stop-color="#eff4ef"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#315d49"/><stop offset="1" stop-color="#244736"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#23392c" flood-opacity=".08"/></filter>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#43815a"/></marker>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#64839a"/></marker>
+    <style>
+      text{font-family:"Segoe UI",Arial,sans-serif}.title{fill:#202d24;font-size:38px;font-weight:700;letter-spacing:-.7px}.subtitle{fill:#69756b;font-size:17px}.kicker{fill:#55735d;font-size:11px;font-weight:700;letter-spacing:1.5px}.cloudKicker{fill:#4f7087;font-size:11px;font-weight:700;letter-spacing:1.5px}.card{fill:#fff;stroke:#e1e7df;stroke-width:1.2}.cardTitle{fill:#26342a;font-size:21px;font-weight:700}.cardSub{fill:#788278;font-size:13px}.label{fill:#49564b;font-size:14px;font-weight:600}.small{fill:#718074;font-size:12px}.tiny{fill:#899288;font-size:11px}.tag{fill:#315d49;font-size:10px;font-weight:700;letter-spacing:.8px}.flow{fill:#48634f;font-size:12px;font-weight:700}.sectionTitle{fill:#fff;font-size:18px;font-weight:700}.sectionText{fill:#e0ebe1;font-size:13px}.cloudTitle{fill:#315d49;font-size:14px;font-weight:700}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <circle cx="1495" cy="42" r="175" fill="#dce9df" opacity=".28"/>
+  <text x="68" y="78" class="kicker">CORNERSTONE · IMPLEMENTED POS ARCHITECTURE</text>
+  <text x="68" y="135" class="title">Local checkout. Cloud sync when available.</text>
+  <text x="70" y="169" class="subtitle">Raspberry Pi edge API and MongoDB keep transaction recording independent of WAN connectivity.</text>
+
+  <rect x="58" y="218" width="465" height="466" rx="22" fill="#eaf1e9" stroke="#d8e4d8"/>
+  <rect x="568" y="218" width="465" height="466" rx="22" fill="#edf2eb" stroke="#d8e4d8"/>
+  <rect x="1078" y="218" width="465" height="466" rx="22" fill="#eaf0f3" stroke="#d6e1e8"/>
+  <text x="84" y="252" class="kicker">STORE TERMINAL</text>
+  <text x="594" y="252" class="kicker">RASPBERRY PI · EDGE DEVICE</text>
+  <text x="1104" y="252" class="cloudKicker">AWS · CLOUD DATABASE</text>
+
+  <g filter="url(#shadow)">
+    <rect x="84" y="278" width="413" height="285" rx="16" class="card"/>
+    <rect x="594" y="278" width="413" height="285" rx="16" class="card"/>
+    <rect x="1104" y="278" width="413" height="285" rx="16" class="card"/>
+  </g>
+  <rect x="108" y="302" width="42" height="42" rx="12" fill="#edf4ed"/>
+  <rect x="121" y="310" width="16" height="25" rx="2.5" fill="none" stroke="#477653" stroke-width="1.8"/>
+  <path d="M125 316h8m-8 5h8m-6 10h4" stroke="#477653" stroke-width="1.5" stroke-linecap="round"/>
+  <text x="164" y="319" class="cardTitle">React POS</text>
+  <text x="164" y="341" class="cardSub">Cashier workflow · browser client</text>
+  <line x1="108" y1="365" x2="473" y2="365" stroke="#edf0eb"/>
+  <text x="110" y="396" class="label">Sale checkout &amp; transaction history</text>
+  <text x="110" y="423" class="small">Validates cart and payment entry in the UI</text>
+  <rect x="108" y="447" width="365" height="91" rx="10" fill="#fff8eb" stroke="#f0dfc0"/>
+  <text x="126" y="474" fill="#765d36" font-size="13" font-weight="700">Browser retry queue</text>
+  <text x="126" y="497" fill="#806c4f" font-size="12">If the edge API cannot be reached, sales remain</text>
+  <text x="126" y="516" fill="#806c4f" font-size="12">in localStorage and retry with the same ID.</text>
+  <text x="108" y="588" class="tiny">Products, customers &amp; active cart are still browser-local.</text>
+
+  <rect x="618" y="302" width="42" height="42" rx="12" fill="#edf4ed"/>
+  <rect x="628" y="313" width="22" height="18" rx="2" fill="none" stroke="#477653" stroke-width="1.7"/>
+  <path d="M632 318h14m-14 5h14m-14 5h9" stroke="#477653" stroke-width="1.4" stroke-linecap="round"/>
+  <text x="674" y="319" class="cardTitle">Node.js + Express REST API</text>
+  <text x="674" y="341" class="cardSub">Local service · accepts transactions over HTTP</text>
+  <line x1="618" y1="365" x2="983" y2="365" stroke="#edf0eb"/>
+  <text x="620" y="395" class="label">Validate ID, items, quantities &amp; totals</text>
+  <text x="620" y="422" class="small">Idempotent writes · conflicting IDs rejected</text>
+  <rect x="618" y="445" width="365" height="93" rx="10" fill="#f4f7f2"/>
+  <text x="636" y="471" class="tag">REST ROUTES</text>
+  <text x="636" y="495" class="small">POST /api/transactions · GET /api/transactions</text>
+  <text x="636" y="517" class="small">POST /api/sync · GET /api/health</text>
+  <text x="618" y="588" class="tiny">Local MongoDB is the durable source for edge sales.</text>
+
+  <rect x="1128" y="302" width="42" height="42" rx="12" fill="#edf2f5"/>
+  <ellipse cx="1149" cy="313" rx="11" ry="5" fill="none" stroke="#58798e" stroke-width="1.6"/>
+  <path d="M1138 313v19c0 3 5 5 11 5s11-2 11-5v-19m-22 7c0 3 5 5 11 5s11-2 11-5m-22 7c0 3 5 5 11 5s11-2 11-5" fill="none" stroke="#58798e" stroke-width="1.5"/>
+  <text x="1184" y="319" class="cardTitle">MongoDB cloud copy</text>
+  <text x="1184" y="341" class="cardSub">AWS-hosted MongoDB-compatible URI</text>
+  <line x1="1128" y1="365" x2="1493" y2="365" stroke="#edf0eb"/>
+  <text x="1130" y="396" class="label">Centralized transaction records</text>
+  <text x="1130" y="423" class="small">Backup, reporting &amp; analytics foundation</text>
+  <rect x="1128" y="447" width="365" height="91" rx="10" fill="#f1f5f7"/>
+  <text x="1146" y="475" class="cloudTitle">Optional configuration</text>
+  <text x="1146" y="498" class="small">Set CLOUD_MONGODB_URI to enable cloud sync.</text>
+  <text x="1146" y="518" class="small">No URI or unavailable WAN? Keep edge records queued.</text>
+  <text x="1128" y="588" class="tiny">Only transactions sync in this implementation.</text>
+
+  <path d="M497 404H594" fill="none" stroke="#43815a" stroke-width="3" marker-end="url(#arrowGreen)"/>
+  <rect x="500" y="375" width="91" height="22" rx="11" fill="#f7faf6"/>
+  <text x="545" y="390" text-anchor="middle" class="flow">REST / JSON</text>
+  <path d="M1007 418H1104" fill="none" stroke="#64839a" stroke-width="3" stroke-dasharray="7 5" marker-end="url(#arrowBlue)"/>
+  <rect x="1008" y="387" width="94" height="22" rx="11" fill="#f7faf6"/>
+  <text x="1055" y="402" text-anchor="middle" fill="#597a8d" font-size="11" font-weight="700">DIFFERENTIAL SYNC</text>
+
+  <rect x="84" y="619" width="1433" height="42" rx="10" fill="url(#green)"/>
+  <text x="105" y="645" class="sectionTitle">Offline behavior</text>
+  <text x="286" y="645" class="sectionText">Local MongoDB accepts sales; pending records retry every 10 seconds. Synced only after cloud copy is verified.</text>
+
+  <rect x="58" y="714" width="1485" height="112" rx="18" fill="#fff" stroke="#e5e9e2"/>
+  <text x="84" y="748" class="kicker">IMPLEMENTATION NOTES</text>
+  <text x="84" y="778" class="label">The edge API requires local MongoDB to start.</text>
+  <text x="84" y="801" class="small">Browser storage is a fallback queue if the API itself is unreachable; it is not a substitute for the edge database.</text>
+  <line x1="812" y1="738" x2="812" y2="805" stroke="#e8ece6"/>
+  <text x="844" y="748" class="kicker">NOT INCLUDED</text>
+  <text x="844" y="778" class="label">Inventory/customer cloud sync and payment processing</text>
+  <text x="844" y="801" class="small">Transactions only · add authentication and operational backups before production deployment.</text>
+</svg>

@@ -1,0 +1,17 @@
+{
+  "name": "Cornerstone POS",
+  "short_name": "Cornerstone",
+  "description": "An offline-ready point of sale for independent retailers.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f6f7f5",
+  "theme_color": "#315d49",
+  "icons": [
+    {
+      "src": "/icons/pos.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

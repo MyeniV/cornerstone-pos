@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title description">
+  <title id="title">Cornerstone POS MongoDB transaction data model</title>
+  <desc id="description">The implemented MongoDB transaction document is stored in the local Raspberry Pi edge database and copied to the configured cloud database. It contains an idempotency key and payload hash, transaction totals, payment method, status, timestamps, and embedded item snapshots. Product, customer, and cart data remain browser-local.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#f8f8f3"/><stop offset="1" stop-color="#eff4ef"/></linearGradient>
+    <linearGradient id="green" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#315d49"/><stop offset="1" stop-color="#244736"/></linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="125%"><feDropShadow dx="0" dy="5" stdDeviation="7" flood-color="#23392c" flood-opacity=".08"/></filter>
+    <marker id="localArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#43815a"/></marker>
+    <marker id="syncArrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto"><path d="M0 0 10 5 0 10Z" fill="#64839a"/></marker>
+    <style>
+      text{font-family:"Segoe UI",Arial,sans-serif}.title{fill:#202d24;font-size:37px;font-weight:700;letter-spacing:-.7px}.subtitle{fill:#69756b;font-size:16px}.kicker{fill:#55735d;font-size:11px;font-weight:700;letter-spacing:1.5px}.blueKicker{fill:#4f7087;font-size:11px;font-weight:700;letter-spacing:1.5px}.card{fill:#fff;stroke:#e1e7df;stroke-width:1.2}.cardTitle{fill:#26342a;font-size:21px;font-weight:700}.cardSub{fill:#788278;font-size:13px}.field{fill:#49564b;font-size:14px}.mono{fill:#315d49;font-size:13px;font-weight:600}.small{fill:#718074;font-size:12px}.tiny{fill:#899288;font-size:11px}.pill{fill:#eef5ed;stroke:#d8e6d8}.pillText{fill:#47734f;font-size:10px;font-weight:700;letter-spacing:.6px}.warn{fill:#765d36;font-size:12px}.sectionHead{fill:#fff;font-size:15px;font-weight:700}.sectionBody{fill:#e0ebe1;font-size:12px}.syncLabel{fill:#597a8d;font-size:11px;font-weight:700}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#bg)"/>
+  <text x="68" y="76" class="kicker">CORNERSTONE · IMPLEMENTED TRANSACTION PERSISTENCE</text>
+  <text x="68" y="132" class="title">MongoDB transaction document &amp; sync state</text>
+  <text x="70" y="165" class="subtitle">One idempotent transaction document is durable at the edge, then replicated to the configured cloud.</text>
+
+  <rect x="58" y="207" width="1484" height="470" rx="22" fill="#eef3ee" stroke="#dce6dc"/>
+  <rect x="85" y="232" width="360" height="405" rx="16" fill="#fff" stroke="#e1e7df"/>
+  <rect x="85" y="232" width="360" height="78" rx="16" fill="#edf4ec"/>
+  <path d="M85 294h360v16H85z" fill="#edf4ec"/>
+  <text x="110" y="261" class="kicker">BROWSER CLIENT</text>
+  <text x="110" y="289" class="cardTitle">Local app state</text>
+  <text x="110" y="344" class="field">cornerstone-products</text>
+  <text x="110" y="370" class="field">cornerstone-customers</text>
+  <text x="110" y="396" class="field">cornerstone-cart</text>
+  <text x="110" y="422" class="mono">cornerstone-sales</text>
+  <line x1="110" y1="445" x2="420" y2="445" stroke="#edf0eb"/>
+  <text x="110" y="474" class="small">Sales queue retries if API is unreachable.</text>
+  <text x="110" y="498" class="small">Other app data is not synced by the backend.</text>
+  <rect x="110" y="532" width="310" height="69" rx="10" fill="#fff8eb" stroke="#f0dfc0"/>
+  <text x="128" y="559" fill="#765d36" font-size="12" font-weight="700">Fallback only</text>
+  <text x="128" y="581" class="warn">Browser storage is not the edge database.</text>
+
+  <rect x="488" y="232" width="600" height="405" rx="16" class="card" filter="url(#shadow)"/>
+  <rect x="488" y="232" width="600" height="78" rx="16" fill="#eaf2e8"/>
+  <path d="M488 294h600v16H488z" fill="#eaf2e8"/>
+  <text x="514" y="261" class="kicker">LOCAL MONGODB · RASPBERRY PI</text>
+  <text x="514" y="289" class="cardTitle">transactions collection</text>
+  <rect x="858" y="250" width="204" height="25" rx="12.5" class="pill"/>
+  <text x="960" y="267" text-anchor="middle" class="pillText">DURABLE EDGE RECORD</text>
+
+  <text x="520" y="346" class="mono">transactionId</text><text x="704" y="346" class="field">unique idempotency key</text>
+  <text x="520" y="375" class="mono">payloadHash</text><text x="704" y="375" class="field">SHA-256 content check</text>
+  <text x="520" y="404" class="mono">createdAt · customer</text><text x="704" y="404" class="field">ISO date · display name</text>
+  <text x="520" y="433" class="mono">items[]</text><text x="704" y="433" class="field">productId · name · quantity · price</text>
+  <text x="520" y="462" class="mono">subtotal · tax · total</text><text x="704" y="462" class="field">validated monetary amounts</text>
+  <text x="520" y="491" class="mono">method</text><text x="704" y="491" class="field">Card | Cash (tender record only)</text>
+  <text x="520" y="520" class="mono">status</text><text x="704" y="520" class="field">pending | synced</text>
+  <text x="520" y="549" class="mono">syncedAt</text><text x="704" y="549" class="field">null until cloud copy verified</text>
+  <rect x="514" y="572" width="548" height="43" rx="9" fill="url(#green)"/>
+  <text x="532" y="599" class="sectionHead">POST validates → local write succeeds → status starts pending</text>
+
+  <rect x="1130" y="232" width="385" height="405" rx="16" fill="#fff" stroke="#e1e7df"/>
+  <rect x="1130" y="232" width="385" height="78" rx="16" fill="#edf2f5"/>
+  <path d="M1130 294h385v16h-385z" fill="#edf2f5"/>
+  <text x="1156" y="261" class="blueKicker">CONFIGURED AWS CLOUD MONGODB</text>
+  <text x="1156" y="289" class="cardTitle">transactions collection</text>
+  <text x="1156" y="347" class="field">Same document shape</text>
+  <text x="1156" y="376" class="field">Upserted by transactionId</text>
+  <text x="1156" y="405" class="field">payloadHash verified</text>
+  <line x1="1156" y1="430" x2="1489" y2="430" stroke="#edf0eb"/>
+  <text x="1156" y="460" class="small">Set CLOUD_MONGODB_URI to enable.</text>
+  <text x="1156" y="486" class="small">Unavailable cloud? Edge stays pending.</text>
+  <rect x="1156" y="522" width="333" height="79" rx="10" fill="#f1f5f7"/>
+  <text x="1174" y="550" fill="#4f7087" font-size="12" font-weight="700">Cloud copy confirmed</text>
+  <text x="1174" y="574" class="small">Then local status becomes synced.</text>
+
+  <path d="M445 438H488" fill="none" stroke="#43815a" stroke-width="2.5" marker-end="url(#localArrow)"/>
+  <rect x="414" y="399" width="106" height="21" rx="10" fill="#eef5ed"/>
+  <text x="467" y="414" text-anchor="middle" class="pillText">REST API WRITE</text>
+  <path d="M1088 438H1130" fill="none" stroke="#64839a" stroke-width="2.5" stroke-dasharray="6 4" marker-end="url(#syncArrow)"/>
+  <rect x="1051" y="399" width="117" height="21" rx="10" fill="#f1f5f7"/>
+  <text x="1109" y="414" text-anchor="middle" class="syncLabel">DIFFERENTIAL SYNC</text>
+
+  <rect x="58" y="711" width="1484" height="122" rx="18" fill="#fff" stroke="#e5e9e2"/>
+  <text x="84" y="746" class="kicker">VALIDATION &amp; RETRY RULES</text>
+  <text x="84" y="778" class="field">Transaction ID, date, customer, line items, integer quantities, supported method and amount totals are checked.</text>
+  <text x="84" y="803" class="small">8% tax and item subtotal are checked. Same ID + same payload is safe to retry; same ID + changed data is rejected.</text>
+  <line x1="1035" y1="735" x2="1035" y2="812" stroke="#e8ece6"/>
+  <text x="1065" y="746" class="kicker">AUTOMATIC RETRY</text>
+  <text x="1065" y="778" class="field">Every 10 seconds</text>
+  <text x="1065" y="803" class="small">Manual trigger: POST /api/sync</text>
+</svg>

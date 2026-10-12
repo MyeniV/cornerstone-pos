@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+  - name: Cornerstone
+    orgId: 1
+    folder: Retail operations
+    type: file
+    disableDeletion: true
+    editable: false
+    options:
+      path: /var/lib/grafana/dashboards
